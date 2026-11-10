@@ -1,0 +1,6 @@
+{
+  "name": "NEXO — Plataforma de Gestão e Oportunidades",
+  "description": "Conectando ideias, negócios e oportunidades: gestão empresarial, educação empreendedora, análise inteligente e conexões locais.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,604 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_01",
+      "name": "Gestor Administrativo NEXO",
+      "email": "admin@nexo.com.br",
+      "passwordHash": "736ea9669276b3fcc61cf1a085b66b6f:100000:f675b6c6cb6534afdb4d8dc216263bdc97bddce11df746c79ef11a92a84a554823d2627580c11337907df47fcdd009b748b247ffe39e4eb955a9bc7d5d23a76f",
+      "role": "admin",
+      "clientType": null,
+      "status": "active",
+      "failedAttempts": 0,
+      "createdAt": "2026-11-09T23:47:49.892Z",
+      "lastLoginAt": "2026-11-09T23:47:57.605Z"
+    },
+    {
+      "id": "usr_biz_01",
+      "name": "Mariana Duarte Mendes",
+      "email": "negocios@exemplo.com.br",
+      "passwordHash": "31631bc2fa9575e5e2d7b7eb3a16ab62:100000:5718f9903bbcf58d5d91c00d1fc06722b28c449f80bd5344597793438072f06ce5353621156f76a738d4ea536cf503bcf042399154c5ceec701817ffd11222dc",
+      "role": "client",
+      "clientType": "business",
+      "status": "active",
+      "failedAttempts": 0,
+      "createdAt": "2026-11-09T23:47:49.892Z",
+      "lastLoginAt": "2026-11-09T23:48:00.720Z"
+    },
+    {
+      "id": "usr_jovem_01",
+      "name": "Lucas Silva Prado",
+      "email": "jovem@exemplo.com.br",
+      "passwordHash": "904a9c3db73ffbd8152ab7d00c2a7a17:100000:c32c004dcdf25816902275855579361c1af86c34ebdc1a1e3ed25db68b6fba025eb56530ef913b47f099eb74b4187418a9d92e5c3398dd884e91c96e7cb85d0b",
+      "role": "client",
+      "clientType": "jovem",
+      "status": "active",
+      "failedAttempts": 0,
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    }
+  ],
+  "passwordResets": [
+    {
+      "id": "rst_1794268088243_mrbuh",
+      "email": "jovem@exemplo.com.br",
+      "hashedCode": "4b6f93d8e988dfdbb10bce3a5f1f74558c57b23bf59520552e38b0b83fb5f125",
+      "expiresAt": 1794268688243,
+      "used": false,
+      "attempts": 0,
+      "createdAt": "2026-11-09T23:48:08.243Z"
+    }
+  ],
+  "companies": [
+    {
+      "id": "comp_01",
+      "userId": "usr_biz_01",
+      "razaoSocial": "Aroma & Grão Comércio de Cafés Especiais Ltda",
+      "nomeFantasia": "Cafeteria & Empório Aroma",
+      "tipoNegocio": "Comércio e Serviços",
+      "categoria": "Alimentos e Bebidas",
+      "descricao": "Cafeteria artesanal especializada em grãos selecionados de pequenos produtores e confeitaria autoral.",
+      "cidade": "Belo Horizonte",
+      "estado": "MG",
+      "tempoFuncionamento": "1 a 3 anos",
+      "numFuncionarios": "3 a 5 funcionários",
+      "cnpj": "45.123.789/0001-90",
+      "cpfResponsavelEncrypted": "23dccf118bf3442cb666012b:c6d7a795d3b556006ac619e73408171d:2011c2a92161da7398567e498b9a",
+      "telefone": "(31) 98765-4321",
+      "emailComercial": "contato@aromaegrao.com.br",
+      "endereco": "Rua das Flores, 420 - Savassi",
+      "objetivos": [
+        "Controle de vendas",
+        "Controle de despesas",
+        "Gestão de estoque",
+        "Cadastro de clientes",
+        "Análise financeira",
+        "Relatórios empresariais"
+      ],
+      "createdAt": "2026-11-09T23:47:49.892Z",
+      "updatedAt": "2026-11-09T23:47:49.892Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_01",
+      "userId": "usr_jovem_01",
+      "nome": "EcoPack Embalagens Biodegradáveis",
+      "tipoNegocio": "Indústria Sustentável / B2B",
+      "produtosServicos": "Embalagens térmicas ecológicas produzidas a partir de fibra de mandioca e bagaço de cana para delivery de restaurantes.",
+      "publicoAlvo": "Restaurantes sustentáveis, cafeterias, hamburguerias artesanais e negócios de alimentação consciente.",
+      "problemaSolucao": "Substituir isopor e plásticos descartáveis de uso único por embalagens 100% compostáveis em 90 dias, mantendo alimentos quentes e crocantes.",
+      "custosPrincipais": "Matéria-prima vegetal prensada, maquinário de termoformagem e logística de distribuição local.",
+      "objetivoProjeto": "Validar protótipo com 10 restaurantes piloto nos próximos 6 meses e buscar apoio de edital de inovação.",
+      "status": "simulacao",
+      "simulacao": {
+        "precoVendaUnitario": 3.2,
+        "custoUnitario": 1.4,
+        "custosFixosMensais": 2400,
+        "vendasEstimadasMensais": 3000,
+        "pontoEquilibrioUnidades": 1334,
+        "pontoEquilibrioReais": 4268.8,
+        "margemLucroPercentual": 56.25,
+        "lucroMensalEstimado": 3000
+      },
+      "etapas": [
+        {
+          "id": "etapa_1",
+          "titulo": "Definição da Ideia e Problema",
+          "concluido": true,
+          "dica": "Identifique claramente quem sofre a dor e por que as soluções atuais são insuficientes."
+        },
+        {
+          "id": "etapa_2",
+          "titulo": "Pesquisa com Potenciais Clientes",
+          "concluido": true,
+          "dica": "Converse com pelo menos 10 proprietários de restaurantes sobre os custos atuais de descartáveis."
+        },
+        {
+          "id": "etapa_3",
+          "titulo": "Simulação de Custos e Ponto de Equilíbrio",
+          "concluido": true,
+          "dica": "Conheça o número exato de unidades necessárias apenas para cobrir os custos fixos."
+        },
+        {
+          "id": "etapa_4",
+          "titulo": "Desenvolvimento do Protótipo Funcional",
+          "concluido": false,
+          "dica": "Produza as primeiras 50 unidades de teste para avaliar resistência térmica e umidade."
+        },
+        {
+          "id": "etapa_5",
+          "titulo": "Validação no Mercado Piloto",
+          "concluido": false,
+          "dica": "Entregue o produto para uso diário em 3 parceiros e colete feedback minucioso."
+        },
+        {
+          "id": "etapa_6",
+          "titulo": "Formalização e Modelo de Crescimento",
+          "concluido": false,
+          "dica": "Defina a estrutura jurídica (MEI ou ME) e estude editais de fomento à sustentabilidade."
+        }
+      ],
+      "createdAt": "2026-11-09T23:47:49.892Z",
+      "updatedAt": "2026-11-09T23:47:49.892Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod_01",
+      "companyId": "comp_01",
+      "nome": "Café Especial Grãos 250g (Mogiana)",
+      "categoria": "Grãos e Cafés",
+      "precoCusto": 18.5,
+      "precoVenda": 36,
+      "estoqueAtual": 42,
+      "estoqueMinimo": 15,
+      "unidade": "pct",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "prod_02",
+      "companyId": "comp_01",
+      "nome": "Cappuccino Italiano Clássico",
+      "categoria": "Bebidas Quentes",
+      "precoCusto": 4.2,
+      "precoVenda": 14,
+      "estoqueAtual": 120,
+      "estoqueMinimo": 30,
+      "unidade": "un",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "prod_03",
+      "companyId": "comp_01",
+      "nome": "Fatia Bolo de Cenoura Artesanal c/ Brigadeiro",
+      "categoria": "Confeitaria",
+      "precoCusto": 5,
+      "precoVenda": 15.5,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 10,
+      "unidade": "fat",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "prod_04",
+      "companyId": "comp_01",
+      "nome": "Pão de Queijo Recheado da Casa",
+      "categoria": "Salgados",
+      "precoCusto": 3.5,
+      "precoVenda": 9.9,
+      "estoqueAtual": 25,
+      "estoqueMinimo": 15,
+      "unidade": "un",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "prod_05",
+      "companyId": "comp_01",
+      "nome": "Café Prensa Francesa 500ml",
+      "categoria": "Métodos Especiais",
+      "precoCusto": 6,
+      "precoVenda": 22,
+      "estoqueAtual": 60,
+      "estoqueMinimo": 20,
+      "unidade": "un",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    }
+  ],
+  "sales": [
+    {
+      "id": "sal_01",
+      "companyId": "comp_01",
+      "clienteId": "cli_01",
+      "clienteNome": "Camila Ferreira Alves",
+      "items": [
+        {
+          "produtoId": "prod_02",
+          "produtoNome": "Cappuccino Italiano Clássico",
+          "quantidade": 2,
+          "precoUnitario": 14,
+          "subtotal": 28
+        },
+        {
+          "produtoId": "prod_03",
+          "produtoNome": "Fatia Bolo de Cenoura Artesanal c/ Brigadeiro",
+          "quantidade": 1,
+          "precoUnitario": 15.5,
+          "subtotal": 15.5
+        }
+      ],
+      "valorTotal": 43.5,
+      "formaPagamento": "pix",
+      "data": "2026-11-09T19:47:50.093Z",
+      "observacoes": "Consumo no local - mesa 4"
+    },
+    {
+      "id": "sal_02",
+      "companyId": "comp_01",
+      "clienteId": "cli_02",
+      "clienteNome": "Roberto Nogueira",
+      "items": [
+        {
+          "produtoId": "prod_01",
+          "produtoNome": "Café Especial Grãos 250g (Mogiana)",
+          "quantidade": 3,
+          "precoUnitario": 36,
+          "subtotal": 108
+        }
+      ],
+      "valorTotal": 108,
+      "formaPagamento": "cartao_credito",
+      "data": "2026-11-08T21:47:50.094Z",
+      "observacoes": "Retirada rápida"
+    },
+    {
+      "id": "sal_03",
+      "companyId": "comp_01",
+      "clienteId": "cli_03",
+      "clienteNome": "Juliana Paes e Costa",
+      "items": [
+        {
+          "produtoId": "prod_04",
+          "produtoNome": "Pão de Queijo Recheado da Casa",
+          "quantidade": 2,
+          "precoUnitario": 9.9,
+          "subtotal": 19.8
+        },
+        {
+          "produtoId": "prod_05",
+          "produtoNome": "Café Prensa Francesa 500ml",
+          "quantidade": 1,
+          "precoUnitario": 22,
+          "subtotal": 22
+        }
+      ],
+      "valorTotal": 41.8,
+      "formaPagamento": "cartao_debito",
+      "data": "2026-11-07T21:47:50.094Z",
+      "observacoes": "Atendimento balcão"
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp_01",
+      "companyId": "comp_01",
+      "categoria": "Insumos e Matéria-Prima",
+      "descricao": "Lote de café cru direto do produtor Mantiqueira",
+      "valor": 1850,
+      "data": "2026-11-06T23:47:50.094Z",
+      "vencimento": "2026-11-08T23:47:50.094Z",
+      "status": "pago"
+    },
+    {
+      "id": "exp_02",
+      "companyId": "comp_01",
+      "categoria": "Aluguel e Condomínio",
+      "descricao": "Aluguel ponto comercial Savassi",
+      "valor": 3200,
+      "data": "2026-11-04T23:47:50.094Z",
+      "vencimento": "2026-11-12T23:47:50.094Z",
+      "status": "pago"
+    },
+    {
+      "id": "exp_03",
+      "companyId": "comp_01",
+      "categoria": "Energia Elétrica",
+      "descricao": "Conta Cemig referência mensal",
+      "valor": 640.5,
+      "data": "2026-11-09T23:47:50.094Z",
+      "vencimento": "2026-11-15T19:47:50.094Z",
+      "status": "pendente"
+    },
+    {
+      "id": "exp_04",
+      "companyId": "comp_01",
+      "categoria": "Embalagens e Descartáveis",
+      "descricao": "Copos ecológicos e embalagens seladas",
+      "valor": 480,
+      "data": "2026-11-09T23:47:50.094Z",
+      "vencimento": "2026-11-13T23:47:50.094Z",
+      "status": "pendente"
+    }
+  ],
+  "clients": [
+    {
+      "id": "cli_01",
+      "companyId": "comp_01",
+      "nome": "Camila Ferreira Alves",
+      "email": "camila.alves@email.com",
+      "telefone": "(31) 99123-1122",
+      "cidade": "Belo Horizonte",
+      "notas": "Cliente assídua no café da manhã. Aprecia cafés frutados.",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "cli_02",
+      "companyId": "comp_01",
+      "nome": "Roberto Nogueira",
+      "email": "roberto.nog@empresa.com.br",
+      "telefone": "(31) 98834-5566",
+      "cidade": "Nova Lima",
+      "notas": "Compra pacotes de café em grãos todo mês para o escritório.",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "cli_03",
+      "companyId": "comp_01",
+      "nome": "Juliana Paes e Costa",
+      "email": "juliana.costa@techhub.com",
+      "telefone": "(31) 99445-7788",
+      "cidade": "Belo Horizonte",
+      "notas": "Participante do clube de fidelidade.",
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    }
+  ],
+  "businessGoals": [
+    {
+      "id": "goal_01",
+      "companyId": "comp_01",
+      "titulo": "Faturamento Mensal Alvo",
+      "metaValor": 25000,
+      "atualValor": 17450,
+      "prazo": "Fim do mês corrente",
+      "status": "em_andamento"
+    },
+    {
+      "id": "goal_02",
+      "companyId": "comp_01",
+      "titulo": "Clientes Cadastrados Ativos",
+      "metaValor": 100,
+      "atualValor": 68,
+      "prazo": "3 meses",
+      "status": "em_andamento"
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "opp_01",
+      "titulo": "Programa Empretec SEBRAE 2026",
+      "categoria": "curso",
+      "organizacao": "SEBRAE",
+      "descricao": "Seminário intensivo de desenvolvimento do comportamento empreendedor baseado em metodologia da ONU.",
+      "link": "https://sebrae.com.br/empretec",
+      "dataInicio": "Inscrições abertas até 15 de cada mês",
+      "localizacao": "Presencial nas principais capitais e polos regionais",
+      "destaque": true,
+      "criadoPor": "usr_admin_01"
+    },
+    {
+      "id": "opp_02",
+      "titulo": "Edital Inova Jovem — Apoio a Startups de Impacto",
+      "categoria": "edital",
+      "organizacao": "Fundação de Fomento e Inovação",
+      "descricao": "Aporte de até R$ 50.000 em capital semente a fundo perdido para projetos de jovens de 18 a 29 anos.",
+      "link": "https://inovajovem.gov.br",
+      "dataInicio": "Submissões até 30 de Novembro",
+      "localizacao": "Nacional (Inscrição online)",
+      "destaque": true,
+      "criadoPor": "usr_admin_01"
+    },
+    {
+      "id": "opp_03",
+      "titulo": "Oficina Prática de Gestão de Fluxo de Caixa e Custos",
+      "categoria": "curso",
+      "organizacao": "Escola de Negócios Locais",
+      "descricao": "Aprenda a controlar entradas, saídas, prazos de recebimento e formação de preço de venda sem complicação.",
+      "link": "https://nexo.org.br/cursos/gestao-financeira",
+      "dataInicio": "Toda terça e quinta, 19h",
+      "localizacao": "Online / Transmissão ao vivo",
+      "destaque": false,
+      "criadoPor": "usr_admin_01"
+    },
+    {
+      "id": "opp_04",
+      "titulo": "Feira Regional de Empreendedorismo e Conexões",
+      "categoria": "evento",
+      "organizacao": "Associação Comercial e Empresarial",
+      "descricao": "Espaço de networking, rodadas de negócios com compradores locais e estandes para novas marcas.",
+      "link": "https://feiradoempreendedor.org.br",
+      "dataInicio": "Dias 12 a 14 do próximo mês",
+      "localizacao": "Centro de Convenções Regional",
+      "destaque": true,
+      "criadoPor": "usr_admin_01"
+    },
+    {
+      "id": "opp_05",
+      "titulo": "Mentoria Jurídica e Contábil Gratuita para MEIs",
+      "categoria": "apoio",
+      "organizacao": "Núcleo de Práticas Jurídicas",
+      "descricao": "Orientação personalizada com advogados e contadores para regularização, contratos e enquadramento fiscal.",
+      "link": "https://nucleodeapoio.org.br",
+      "dataInicio": "Atendimento contínuo mediante agendamento",
+      "localizacao": "Híbrido (Presencial ou videoconferência)",
+      "destaque": false,
+      "criadoPor": "usr_admin_01"
+    }
+  ],
+  "supportTickets": [
+    {
+      "id": "tkt_01",
+      "ticketNumber": "NX-2026-1001",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "userName": "Mariana Duarte Mendes",
+      "assunto": "Não consigo emitir pedido de venda no balcão",
+      "categoria": "vendas",
+      "mensagem": "Ao tentar registrar a venda com 3 itens, o sistema apresentou mensagem de timeout e não confirmou o pagamento. Estamos com clientes na fila.",
+      "status": "em_andamento",
+      "prioridade": "alta",
+      "prioridadeMotivo": "Alto risco de interrupção operacional, bloqueio de acesso ou segurança. Critérios identificados: Impacto direto na operação comercial/financeira: \"pagamento\"; Categoria operacional relevante: vendas",
+      "respostas": [
+        {
+          "id": "resp_01",
+          "autorId": "usr_admin_01",
+          "autorNome": "Suporte Técnico NEXO",
+          "autorRole": "admin",
+          "mensagem": "Olá Mariana, nossa equipe operacional identificou uma oscilação na rota de transações do gateway e já aplicou a correção de contingência. Pode tentar registrar novamente?",
+          "data": "2026-11-09T21:47:50.094Z"
+        }
+      ],
+      "createdAt": "2026-11-09T18:47:50.094Z",
+      "updatedAt": "2026-11-09T21:47:50.094Z"
+    },
+    {
+      "id": "tkt_02",
+      "ticketNumber": "NX-2026-1002",
+      "userId": "usr_jovem_01",
+      "userEmail": "jovem@exemplo.com.br",
+      "userName": "Lucas Silva Prado",
+      "assunto": "Dúvida sobre simulador de ponto de equilíbrio",
+      "categoria": "duvida",
+      "mensagem": "Gostaria de saber se a fórmula do ponto de equilíbrio já considera a depreciação de máquinas que comprei em segunda mão.",
+      "status": "pendente",
+      "prioridade": "baixa",
+      "prioridadeMotivo": "Dúvida operacional, sugestão ou baixa urgência. Critérios identificados: Categoria informativa/consultiva: duvida",
+      "respostas": [],
+      "createdAt": "2026-11-09T15:47:50.094Z",
+      "updatedAt": "2026-11-09T15:47:50.094Z"
+    },
+    {
+      "id": "tkt_03",
+      "ticketNumber": "NX-2026-1003",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "userName": "Mariana Duarte Mendes",
+      "assunto": "Suspeita de tentativa de acesso não autorizada na conta",
+      "categoria": "segurança",
+      "mensagem": "Recebi um aviso no meu e-mail informando que alguém tentou logar na minha conta a partir de um IP desconhecido. Solicito bloqueio preventivo e verificação.",
+      "status": "pendente",
+      "prioridade": "alta",
+      "prioridadeMotivo": "Alto risco de interrupção operacional, bloqueio de acesso ou segurança. Critérios identificados: Termo de alta criticidade detectado: \"bloqueio\"; Categoria crítica: segurança",
+      "respostas": [],
+      "createdAt": "2026-11-09T22:47:50.094Z",
+      "updatedAt": "2026-11-09T22:47:50.094Z"
+    }
+  ],
+  "networkProfiles": [
+    {
+      "id": "net_01",
+      "userId": "usr_jovem_01",
+      "nomePublico": "Lucas Silva Prado — Fundador EcoPack",
+      "tipoPerfil": "jovem",
+      "biografia": "Estudante de engenharia e entusiasta de biomateriais. Desenvolvendo soluções para diminuir o impacto do plástico descartável no setor gastronômico.",
+      "areaAtuacao": "Sustentabilidade e Embalagens",
+      "habilidades": [
+        "Biomateriais",
+        "Modelagem de Negócios",
+        "Design de Produto",
+        "Sustentabilidade"
+      ],
+      "contatoAutorizado": "contato.lucas@ecopack.exemplo.com.br",
+      "projetosPublicos": [
+        {
+          "titulo": "EcoPack Embalagens",
+          "resumo": "Embalagens térmicas biodegradáveis feitas de mandioca e bagaço de cana."
+        }
+      ],
+      "visivel": true,
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    },
+    {
+      "id": "net_02",
+      "userId": "usr_biz_01",
+      "nomePublico": "Mariana Duarte Mendes — Café & Empório Aroma",
+      "tipoPerfil": "empreendedor",
+      "biografia": "Empreendedora com 3 anos de atuação no mercado de cafeterias especiais. Apaixonada por comércio justo e valorização de pequenos produtores rurais.",
+      "areaAtuacao": "Alimentos, Bebidas e Varejo Especial",
+      "habilidades": [
+        "Gestão de Cafeterias",
+        "Controle Financeiro",
+        "Curadoria de Cafés",
+        "Atendimento"
+      ],
+      "contatoAutorizado": "mariana@aromaegrao.com.br",
+      "projetosPublicos": [
+        {
+          "titulo": "Cafeteria & Empório Aroma",
+          "resumo": "Cafeteria especializada em cafés especiais e doces artesanais em Belo Horizonte."
+        }
+      ],
+      "visivel": true,
+      "createdAt": "2026-11-09T23:47:49.892Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "aud_1794268088244_1h7j9",
+      "timestamp": "2026-11-09T23:48:08.244Z",
+      "userId": "usr_jovem_01",
+      "userEmail": "jovem@exemplo.com.br",
+      "action": "SOLICITACAO_RECUPERACAO_SENHA",
+      "resource": "AUTH",
+      "details": "Código de recuperação gerado para jovem@exemplo.com.br. SMTP configurado: false",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794268080720_yp8vf",
+      "timestamp": "2026-11-09T23:48:00.720Z",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via client.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794268077606_3cg7u",
+      "timestamp": "2026-11-09T23:47:57.606Z",
+      "userId": "usr_admin_01",
+      "userEmail": "admin@nexo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via admin.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_01",
+      "timestamp": "2026-11-08T23:47:50.094Z",
+      "userId": "usr_admin_01",
+      "userEmail": "admin@nexo.com.br",
+      "action": "INICIALIZACAO_SISTEMA",
+      "resource": "SISTEMA_NEXO",
+      "details": "Criação inicial da base de dados e esquemas de proteção criptográfica.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_02",
+      "timestamp": "2026-11-09T11:47:50.094Z",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "action": "CADASTRO_EMPRESA",
+      "resource": "COMPANIES",
+      "details": "Empresa cadastrada com sucesso via assistente guiado. CPF do responsável criptografado com chave AES-256.",
+      "ip": "189.40.12.8"
+    },
+    {
+      "id": "aud_03",
+      "timestamp": "2026-11-09T19:47:50.094Z",
+      "userId": "usr_jovem_01",
+      "userEmail": "jovem@exemplo.com.br",
+      "action": "SIMULACAO_PROJETO_CRIADA",
+      "resource": "PROJECTS_JOVEM",
+      "details": "Projeto EcoPack configurado com cálculo de Ponto de Equilíbrio em 1334 unidades.",
+      "ip": "177.105.88.2"
+    }
+  ]
+}
