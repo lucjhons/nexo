@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { router as apiRouter } from './src/server/routes.js';
@@ -37,11 +38,32 @@ async function startServer() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
+
+    // Explicit fallback for SPA routes in dev mode
+    app.use('*', async (req, res, next) => {
+      if (req.originalUrl.startsWith('/api')) return next();
+      try {
+        const url = req.originalUrl;
+        const htmlPath = path.resolve(__dirname, 'index.html');
+        let template = fs.readFileSync(htmlPath, 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e) {
+        next(e);
+      }
+    });
   } else {
     const distPath = path.resolve(__dirname, 'dist');
-    app.use(express.static(distPath));
+    const distIndexPath = path.resolve(distPath, 'index.html');
+    if (fs.existsSync(distPath)) {
+      app.use(express.static(distPath));
+    }
     app.get('*', (_req, res) => {
-      res.sendFile(path.resolve(distPath, 'index.html'));
+      if (fs.existsSync(distIndexPath)) {
+        res.sendFile(distIndexPath);
+      } else {
+        res.sendFile(path.resolve(__dirname, 'index.html'));
+      }
     });
   }
 
