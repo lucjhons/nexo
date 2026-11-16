@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext.js';
+import { NotificationBell } from './notifications/NotificationBell.js';
 import { Sun, Moon, MessageSquare, LogOut, Shield, Briefcase, Sparkles, User as UserIcon } from 'lucide-react';
 
 interface NavbarProps {
@@ -91,6 +92,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth, currentView, onNavig
 
         {/* Zone 3: Actions & Profile */}
         <div className="flex items-center gap-3 shrink-0">
+          {user && <NotificationBell onNavigate={onNavigate} />}
+
           {/* WhatsApp Support shortcut */}
           <button
             onClick={handleWhatsAppClick}

@@ -214,3 +214,26 @@ export interface AdminUserRecord {
   createdAt: string;
   lastLoginAt?: string;
 }
+
+export type NotificationType =
+  | 'sistema'
+  | 'suporte'
+  | 'conta'
+  | 'oportunidade'
+  | 'comercial'
+  | 'estoque'
+  | 'financeiro'
+  | 'rede';
+
+export interface AppNotification {
+  id: string;
+  userId: string;
+  tipo: NotificationType;
+  titulo: string;
+  mensagem: string;
+  linkView?: string | null;
+  metadata?: Record<string, any>;
+  read: boolean;
+  readAt?: string;
+  createdAt: string;
+}

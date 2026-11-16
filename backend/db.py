@@ -33,6 +33,7 @@ DB_DIR = os.path.join(BASE_DIR, 'data')
 DB_FILE = os.path.join(DB_DIR, 'nexo_database.json')
 
 AUDIT_LOG_MAX = 500
+NOTIFICATION_MAX_PER_USER = 100
 SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
 
@@ -79,8 +80,72 @@ class Database:
     def __init__(self):
         self._lock = threading.RLock()
         self.data = self._load_database()
+        if self._ensure_schema():
+            self._persist()
 
     # ------------------------------------------------------------- persistência
+    def _ensure_schema(self) -> bool:
+        """Adiciona estruturas novas a bancos já existentes (migração suave)."""
+        changed = False
+        if 'notifications' not in self.data:
+            self.data['notifications'] = self._build_startup_notifications()
+            changed = True
+        return changed
+
+    def _build_startup_notifications(self) -> list:
+        """Cria a central de notificações já com avisos úteis do estado atual."""
+        notifications = []
+        created_at = now_iso()
+
+        def add(user_id, tipo, titulo, mensagem, link_view=None, metadata=None):
+            notifications.append({
+                'id': gen_id('ntf'),
+                'userId': user_id,
+                'tipo': tipo,
+                'titulo': titulo,
+                'mensagem': mensagem,
+                'linkView': link_view,
+                'metadata': metadata or {},
+                'read': False,
+                'createdAt': created_at,
+            })
+
+        users = self.data.get('users', [])
+        for user in users:
+            if user.get('status') != 'active':
+                continue
+            if user.get('role') == 'admin':
+                view = 'admin'
+            elif user.get('clientType') == 'jovem':
+                view = 'jovem'
+            else:
+                view = 'business'
+            add(
+                user['id'],
+                'sistema',
+                'Central de notificações ativa',
+                'Acompanhe aqui novidades, chamados de suporte, atualizações da conta e oportunidades da plataforma.',
+                view,
+            )
+
+        admins = [u for u in users if u.get('role') == 'admin' and u.get('status') == 'active']
+        for ticket in self.data.get('supportTickets', []):
+            if ticket.get('status') == 'concluido' or not admins:
+                continue
+            for admin in admins:
+                add(
+                    admin['id'],
+                    'suporte',
+                    f'Chamado {ticket.get("ticketNumber", "")} aguardando atendimento',
+                    f'{ticket.get("assunto", "Novo chamado")} — aberto por {ticket.get("userName", "cliente NEXO")}.',
+                    'admin',
+                    {'ticketId': ticket.get('id'), 'ticketNumber': ticket.get('ticketNumber')},
+                )
+
+        # Notificações mais recentes primeiro
+        notifications.reverse()
+        return notifications
+
     def _load_database(self) -> dict:
         with self._lock:
             os.makedirs(DB_DIR, exist_ok=True)
@@ -314,6 +379,123 @@ class Database:
         with self._lock:
             return self.data['auditLogs'][:limit]
 
+    # ------------------------------------------------------------ notificações
+    def create_notification(self, user_id, tipo, titulo, mensagem, link_view=None, metadata=None):
+        with self._lock:
+            notifications = self.data.setdefault('notifications', [])
+            record = {
+                'id': gen_id('ntf'),
+                'userId': user_id,
+                'tipo': tipo,
+                'titulo': titulo,
+                'mensagem': mensagem,
+                'linkView': link_view,
+                'metadata': metadata or {},
+                'read': False,
+                'createdAt': now_iso(),
+            }
+            notifications.insert(0, record)
+
+            # Mantém o histórico enxuto por usuário
+            user_notifications = [n for n in notifications if n.get('userId') == user_id]
+            if len(user_notifications) > NOTIFICATION_MAX_PER_USER:
+                to_remove = {n.get('id') for n in user_notifications[NOTIFICATION_MAX_PER_USER:]}
+                self.data['notifications'] = [
+                    n for n in notifications if n.get('id') not in to_remove
+                ]
+
+            self._persist()
+            return record
+
+    def notify_admins(self, tipo, titulo, mensagem, link_view='admin', metadata=None):
+        """Envia a notificação para todos os administradores ativos."""
+        with self._lock:
+            admins = [
+                u for u in self.data.get('users', [])
+                if u.get('role') == 'admin' and u.get('status') == 'active'
+            ]
+        for admin in admins:
+            self.create_notification(admin['id'], tipo, titulo, mensagem, link_view, metadata)
+        return len(admins)
+
+    def notify_all_clients(self, tipo, titulo, mensagem, link_view=None, metadata=None):
+        """Envia a notificação para todos os clientes ativos (ex.: novas oportunidades)."""
+        with self._lock:
+            clients = [
+                u for u in self.data.get('users', [])
+                if u.get('role') == 'client' and u.get('status') == 'active'
+            ]
+        for client in clients:
+            self.create_notification(client['id'], tipo, titulo, mensagem, link_view, metadata)
+        return len(clients)
+
+    def get_notifications(self, user_id, limit=50):
+        with self._lock:
+            items = [n for n in self.data.get('notifications', []) if n.get('userId') == user_id]
+            items.sort(key=lambda n: parse_dt(n.get('createdAt', '')), reverse=True)
+            return copy.deepcopy(items[:limit])
+
+    def count_unread_notifications(self, user_id):
+        with self._lock:
+            return len([
+                n for n in self.data.get('notifications', [])
+                if n.get('userId') == user_id and not n.get('read')
+            ])
+
+    def mark_notification_read(self, user_id, notification_id):
+        with self._lock:
+            notification = next(
+                (
+                    n for n in self.data.get('notifications', [])
+                    if n.get('id') == notification_id and n.get('userId') == user_id
+                ),
+                None,
+            )
+            if not notification:
+                return None
+            if not notification.get('read'):
+                notification['read'] = True
+                notification['readAt'] = now_iso()
+                self._persist()
+            return copy.deepcopy(notification)
+
+    def mark_all_notifications_read(self, user_id):
+        with self._lock:
+            updated = 0
+            now = now_iso()
+            for notification in self.data.get('notifications', []):
+                if notification.get('userId') == user_id and not notification.get('read'):
+                    notification['read'] = True
+                    notification['readAt'] = now
+                    updated += 1
+            if updated:
+                self._persist()
+            return updated
+
+    def delete_notification(self, user_id, notification_id):
+        with self._lock:
+            before = len(self.data.get('notifications', []))
+            self.data['notifications'] = [
+                n for n in self.data.get('notifications', [])
+                if not (n.get('id') == notification_id and n.get('userId') == user_id)
+            ]
+            if len(self.data['notifications']) == before:
+                return False
+            self._persist()
+            return True
+
+    def clear_read_notifications(self, user_id):
+        with self._lock:
+            before = len(self.data.get('notifications', []))
+            self.data['notifications'] = [
+                n for n in self.data.get('notifications', [])
+                if not (n.get('userId') == user_id and n.get('read'))
+            ]
+            removed = before - len(self.data['notifications'])
+            if removed:
+                self._persist()
+            return removed
+
     # ---------------------------------------------------------- usuários & auth
     def find_user_by_email(self, email):
         with self._lock:
@@ -350,6 +532,15 @@ class Database:
                 'resource': 'USERS',
                 'details': f'Novo usuário registrado ({new_user["role"]} / {new_user["clientType"] or "indefinido"})',
             })
+
+            view = 'jovem' if new_user.get('clientType') == 'jovem' else 'business'
+            self.create_notification(
+                new_user['id'],
+                'sistema',
+                'Bem-vindo(a) ao NEXO!',
+                'Sua central de notificações está pronta. Você receberá avisos de suporte, conta, oportunidades e novidades da plataforma.',
+                view,
+            )
             return new_user
 
     def update_user_login_success(self, user_id):
@@ -475,6 +666,18 @@ class Database:
                 'resource': 'USERS',
                 'details': f'Status do usuário {user["email"]} alterado para "{status}" pelo administrador.',
             })
+
+            self.create_notification(
+                user['id'],
+                'conta',
+                'Conta reativada' if status == 'active' else 'Conta suspensa',
+                (
+                    'Seu acesso à plataforma NEXO foi reativado. Bem-vindo(a) de volta!'
+                    if status == 'active'
+                    else 'Sua conta foi suspensa pela administração. Entre em contato com o suporte para mais esclarecimentos.'
+                ),
+                None if status == 'active' else 'suporte',
+            )
             return user
 
     # ------------------------------------------------------- empresa (BUSINESS)
@@ -502,6 +705,7 @@ class Database:
         with self._lock:
             company = next((c for c in self.data['companies'] if c.get('userId') == user_id), None)
             now = now_iso()
+            is_new_company = company is None
 
             if not company:
                 company = {
@@ -539,6 +743,15 @@ class Database:
                 company['updatedAt'] = now
 
             self._persist()
+            if is_new_company:
+                self.create_notification(
+                    user_id,
+                    'comercial',
+                    'Empresa cadastrada com sucesso',
+                    f'O painel do NEXO Business para "{company.get("nomeFantasia") or company.get("razaoSocial")}" está pronto para uso.',
+                    'business',
+                    {'companyId': company.get('id')},
+                )
             return company
 
     # --------------------------------------------------- produtos & estoque
@@ -620,6 +833,7 @@ class Database:
 
             valor_total = 0.0
             processed_items = []
+            low_stock_alerts = []
             for item in items:
                 product = next(
                     (p for p in self.data['products'] if p.get('id') == item.get('produtoId') and p.get('companyId') == company_id),
@@ -647,7 +861,17 @@ class Database:
                     'precoUnitario': preco_unitario,
                     'subtotal': subtotal,
                 })
-                product['estoqueAtual'] = _whole(product.get('estoqueAtual', 0) - quantidade)
+                estoque_anterior = to_number(product.get('estoqueAtual'), 0)
+                estoque_minimo = to_number(product.get('estoqueMinimo'), 0)
+                product['estoqueAtual'] = _whole(estoque_anterior - quantidade)
+                estoque_atual = to_number(product.get('estoqueAtual'), 0)
+                if estoque_anterior > estoque_minimo >= estoque_atual:
+                    low_stock_alerts.append({
+                        'nome': product.get('nome'),
+                        'estoqueAtual': product.get('estoqueAtual'),
+                        'estoqueMinimo': product.get('estoqueMinimo'),
+                        'unidade': product.get('unidade'),
+                    })
                 valor_total = round(valor_total + subtotal, 2)
 
             new_sale = {
@@ -663,6 +887,17 @@ class Database:
             }
             self.data['sales'].insert(0, new_sale)
             self._persist()
+
+            for alert in low_stock_alerts:
+                unidade = f' {alert["unidade"]}' if alert.get('unidade') else ''
+                self.create_notification(
+                    user_id,
+                    'estoque',
+                    'Alerta de estoque baixo',
+                    f'"{alert["nome"]}" atingiu {alert["estoqueAtual"]}{unidade} em estoque (mínimo: {alert["estoqueMinimo"]}{unidade}). Reponha para não perder vendas.',
+                    'business',
+                    {'productName': alert['nome'], 'estoqueAtual': alert['estoqueAtual']},
+                )
             return new_sale
 
     # -------------------------------------------------------------- despesas
@@ -948,6 +1183,13 @@ class Database:
             }
             self.data['opportunities'].insert(0, new_opp)
             self._persist()
+            self.notify_all_clients(
+                'oportunidade',
+                'Nova oportunidade publicada',
+                f'{new_opp["titulo"]} — {new_opp.get("organizacao") or "NEXO"}. Confira os detalhes na área de oportunidades.',
+                'local',
+                {'opportunityId': new_opp['id']},
+            )
             return new_opp
 
     def delete_opportunity(self, opp_id):
@@ -1022,6 +1264,22 @@ class Database:
                 'resource': 'SUPPORT_TICKETS',
                 'details': f'Chamado {ticket_number} criado. Classificação interna calculada: {classification["prioridade"].upper()}',
             })
+
+            self.create_notification(
+                user_id,
+                'suporte',
+                f'Chamado {ticket_number} registrado',
+                f'Seu chamado "{new_ticket["assunto"]}" foi recebido e será analisado pela equipe NEXO.',
+                'suporte',
+                {'ticketId': new_ticket['id'], 'ticketNumber': ticket_number},
+            )
+            self.notify_admins(
+                'suporte',
+                f'Novo chamado {ticket_number}',
+                f'{new_ticket["assunto"]} — aberto por {user_name}.',
+                'admin',
+                {'ticketId': new_ticket['id'], 'ticketNumber': ticket_number},
+            )
             return new_ticket
 
     def reply_ticket(self, ticket_id, autor_id, autor_nome, autor_role, mensagem, novo_status=None):
@@ -1056,6 +1314,29 @@ class Database:
                 'resource': 'SUPPORT_TICKETS',
                 'details': f'Resposta adicionada ao chamado {ticket["ticketNumber"]} por {autor_nome} ({autor_role}). Status: {ticket["status"]}',
             })
+
+            resumo = str(mensagem).strip()
+            if len(resumo) > 120:
+                resumo = resumo[:117] + '...'
+
+            if autor_role == 'admin':
+                if ticket.get('userId') != autor_id:
+                    self.create_notification(
+                        ticket['userId'],
+                        'suporte',
+                        f'Resposta no chamado {ticket["ticketNumber"]}',
+                        f'{autor_nome}: {resumo}',
+                        'suporte',
+                        {'ticketId': ticket['id'], 'ticketNumber': ticket['ticketNumber']},
+                    )
+            else:
+                self.notify_admins(
+                    'suporte',
+                    f'Nova resposta do cliente no chamado {ticket["ticketNumber"]}',
+                    f'{autor_nome}: {resumo}',
+                    'admin',
+                    {'ticketId': ticket['id'], 'ticketNumber': ticket['ticketNumber']},
+                )
             return ticket
 
     def update_ticket_status(self, ticket_id, status, admin_user_id):
@@ -1063,6 +1344,7 @@ class Database:
             ticket = next((t for t in self.data['supportTickets'] if t.get('id') == ticket_id), None)
             if not ticket:
                 raise ValueError('Chamado não encontrado.')
+            old_status = ticket.get('status')
             ticket['status'] = status
             ticket['updatedAt'] = now_iso()
             self._persist()
@@ -1073,6 +1355,22 @@ class Database:
                 'resource': 'SUPPORT_TICKETS',
                 'details': f'Status do chamado {ticket["ticketNumber"]} alterado para "{status}".',
             })
+
+            if old_status != status:
+                status_label = {
+                    'pendente': 'Pendente',
+                    'em_andamento': 'Em andamento',
+                    'aguardando_resposta': 'Aguardando sua resposta',
+                    'concluido': 'Concluído',
+                }.get(status, status)
+                self.create_notification(
+                    ticket['userId'],
+                    'suporte',
+                    f'Chamado {ticket["ticketNumber"]} atualizado',
+                    f'O status do seu chamado "{ticket["assunto"]}" agora é: {status_label}.',
+                    'suporte',
+                    {'ticketId': ticket['id'], 'ticketNumber': ticket['ticketNumber'], 'status': status},
+                )
             return ticket
 
     # ------------------------------------------------ perfis (NEXO NETWORK)

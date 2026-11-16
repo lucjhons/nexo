@@ -694,7 +694,64 @@ def public_ticket(ticket: dict) -> dict:
     return public
 
 
-# ------------------------------------- 9. PAINEL ADMINISTRATIVO (ROLE ADMIN)
+# ---------------------------------------- 9. CENTRAL DE NOTIFICAÇÕES (USUÁRIO)
+def register_notifications(bp):
+    @bp.get('/notifications')
+    @require_auth
+    def notifications_list():
+        limit = request.args.get('limit', default=50, type=int) or 50
+        limit = max(1, min(limit, 100))
+        return jsonify(
+            notifications=db.get_notifications(g.user['id'], limit=limit),
+            unreadCount=db.count_unread_notifications(g.user['id']),
+        )
+
+    @bp.post('/notifications/<notification_id>/read')
+    @require_auth
+    def notifications_mark_read(notification_id):
+        notification = db.mark_notification_read(g.user['id'], notification_id)
+        if not notification:
+            return jsonify(error='Notificação não encontrada.'), 404
+        return jsonify(
+            message='Notificação marcada como lida.',
+            notification=notification,
+            unreadCount=db.count_unread_notifications(g.user['id']),
+        )
+
+    @bp.post('/notifications/read-all')
+    @require_auth
+    def notifications_mark_all_read():
+        updated = db.mark_all_notifications_read(g.user['id'])
+        return jsonify(
+            message='Todas as notificações foram marcadas como lidas.',
+            updated=updated,
+            unreadCount=0,
+        )
+
+    @bp.delete('/notifications/read')
+    @require_auth
+    def notifications_clear_read():
+        removed = db.clear_read_notifications(g.user['id'])
+        return jsonify(
+            message='Notificações lidas removidas.',
+            removed=removed,
+            unreadCount=db.count_unread_notifications(g.user['id']),
+        )
+
+    @bp.delete('/notifications/<notification_id>')
+    @require_auth
+    def notifications_delete(notification_id):
+        success = db.delete_notification(g.user['id'], notification_id)
+        if not success:
+            return jsonify(error='Notificação não encontrada.'), 404
+        return jsonify(
+            success=True,
+            message='Notificação removida.',
+            unreadCount=db.count_unread_notifications(g.user['id']),
+        )
+
+
+# ------------------------------------- 10. PAINEL ADMINISTRATIVO (ROLE ADMIN)
 def register_admin(bp):
     @bp.get('/admin/stats')
     @require_admin
@@ -786,6 +843,7 @@ def create_api_blueprint():
     register_jovem(bp)
     register_local_network(bp)
     register_support(bp)
+    register_notifications(bp)
     register_admin(bp)
     return bp
 

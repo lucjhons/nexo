@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
+import { NotificationProvider } from './context/NotificationContext.js';
 import { Navbar } from './components/Navbar.js';
 import { LandingPage } from './components/LandingPage.js';
 import { AuthModal } from './components/auth/AuthModal.js';
@@ -142,7 +143,9 @@ const MainApp: React.FC = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <MainApp />
+      <NotificationProvider>
+        <MainApp />
+      </NotificationProvider>
     </AuthProvider>
   );
 }
