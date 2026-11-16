@@ -1,0 +1,7 @@
+# NEXO — motor de back-end em Flask (Python)
+flask>=3.1
+cryptography>=44
+
+# Opcional: cliente da API Gemini usada pela NEXO Inteligência.
+# Sem este pacote (ou sem GEMINI_API_KEY) o sistema usa o modo de análise local automaticamente.
+google-genai>=1.0

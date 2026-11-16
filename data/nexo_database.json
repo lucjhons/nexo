@@ -10,7 +10,7 @@
       "status": "active",
       "failedAttempts": 0,
       "createdAt": "2026-11-09T23:47:49.892Z",
-      "lastLoginAt": "2026-11-09T23:47:57.605Z"
+      "lastLoginAt": "2026-11-11T00:37:10.344Z"
     },
     {
       "id": "usr_biz_01",
@@ -22,7 +22,7 @@
       "status": "active",
       "failedAttempts": 0,
       "createdAt": "2026-11-09T23:47:49.892Z",
-      "lastLoginAt": "2026-11-09T23:48:00.720Z"
+      "lastLoginAt": "2026-11-11T00:38:58.777Z"
     },
     {
       "id": "usr_jovem_01",
@@ -540,6 +540,85 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud_1794357538782_lhy7t",
+      "timestamp": "2026-11-11T00:38:58.782Z",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via client.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794357430346_l3wgr",
+      "timestamp": "2026-11-11T00:37:10.346Z",
+      "userId": "usr_admin_01",
+      "userEmail": "admin@nexo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via admin.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794357430232_5ihpw",
+      "timestamp": "2026-11-11T00:37:10.232Z",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via client.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794357414931_2xgeq",
+      "timestamp": "2026-11-11T00:36:54.931Z",
+      "userId": "usr_biz_01",
+      "userEmail": "negocios@exemplo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via client.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794356538488_h1vnp",
+      "timestamp": "2026-11-11T00:22:18.488Z",
+      "userId": "usr_admin_01",
+      "userEmail": "admin@nexo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via admin.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794356532120_vlode",
+      "timestamp": "2026-11-11T00:22:12.120Z",
+      "userId": "usr_admin_01",
+      "userEmail": "admin@nexo.com.br",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via admin.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794272217239_uak4i",
+      "timestamp": "2026-11-10T00:56:57.239Z",
+      "userId": "usr_1794272217127_1vp02",
+      "userEmail": "teste.final@nexo.com",
+      "action": "LOGIN_SUCESSO",
+      "resource": "AUTH",
+      "details": "Login efetuado com sucesso via business.",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "aud_1794272217163_aa6b3",
+      "timestamp": "2026-11-10T00:56:57.163Z",
+      "userId": "usr_1794272217127_1vp02",
+      "userEmail": "teste.final@nexo.com",
+      "action": "USUARIO_CADASTRADO",
+      "resource": "USERS",
+      "details": "Novo usuário registrado (business / indefinido)"
+    },
     {
       "id": "aud_1794268088244_1h7j9",
       "timestamp": "2026-11-09T23:48:08.244Z",

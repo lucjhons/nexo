@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-build:
+    name: Type-check e Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Type-check (tsc --noEmit)
+        run: npm run lint
+
+      - name: Build de produção (vite build)
+        run: npm run build
+
+      - name: Upload do bundle (dist)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  smoke-test:
+    name: Smoke test do servidor Flask
+    runs-on: ubuntu-latest
+    needs: lint-build
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependências do back-end
+        run: pip install -r requirements.txt
+
+      - name: Download do bundle (dist)
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Subir servidor Flask e validar
+        run: |
+          PORT=3000 python3 app.py &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true' EXIT
+
+          ok=0
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://127.0.0.1:3000; then ok=1; break; fi
+            sleep 1
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::Servidor não subiu na porta 3000 em 60s"
+            exit 1
+          fi
+          echo "OK: servidor respondeu na porta 3000"
+
+          curl -sf http://127.0.0.1:3000 | grep -q 'id="root"' \
+            && echo "OK: homepage renderiza o root da SPA" \
+            || { echo "::error::Homepage sem #root"; exit 1; }
+
+          curl -sf http://127.0.0.1:3000/api/config/public | grep -q 'slogan' \
+            && echo "OK: API /api/config/public respondendo" \
+            || { echo "::error::API não respondeu"; exit 1; }
